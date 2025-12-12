@@ -1,0 +1,8 @@
+# openbox/autostart
+
+# 1. 启动输入法守护进程
+fcitx -d &
+
+# 2. 启动微信
+# sleep 2 是为了等待 X Server 完全就绪
+(sleep 2 && /usr/bin/wechat --no-sandbox) &

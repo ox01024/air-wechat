@@ -1,0 +1,28 @@
+services:
+  wechat:
+    build: .
+    container_name: wechat_remote
+    privileged: true # 微信沙箱和 Electron 需要较高权限
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Asia/Shanghai
+      - SUBFOLDER=/
+      - KEYBOARD=en-us-qwerty
+      # KasmVNC 参数
+      - CUSTOM_PORT=3000
+      - TITLE=WeChat
+    volumes:
+      # 挂载配置目录，保存登录状态
+      - ./wechat_data:/config
+      - ./wechat_data/.xwechat:/root/.xwechat
+      - ./wechat_data/xwechat_files:/root/xwechat_files
+      # 挂载 Openbox 自启动脚本
+      - ./openbox/autostart:/config/.config/openbox/autostart
+      # 挂载我们上面写的 XML 注入脚本，实现自动去边框
+      - ./inject_openbox_rules.sh:/custom-cont-init.d/99-inject-rules:ro
+    ports:
+      - 3000:3000
+    # 内存共享极其重要，否则微信必崩
+    shm_size: "4gb" 
+    restart: unless-stopped

@@ -1,0 +1,4 @@
+<!-- Openbox 窗口规则（去边框、全屏） -->
+<openbox_config xmlns="http://openbox.org/3.4/rc" xmlns:xi="http://www.w3.org/2001/XInclude">
+    <!-- TODO: Add rules -->
+</openbox_config>
