@@ -42,9 +42,17 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-# 3. 下载并安装微信 (使用官方最新 x86_64 deb 包)
+# 3. 下载并安装微信 (自动识别架构 amd64/arm64)
 # 注意：URL 可能会变，若失效请替换为最新的下载链接
-RUN wget -O /tmp/wechat.deb "https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_x86_64.deb" \
+RUN ARCH=$(dpkg --print-architecture) && \
+    if [ "$ARCH" = "amd64" ]; then \
+        URL="https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_x86_64.deb"; \
+    elif [ "$ARCH" = "arm64" ]; then \
+        URL="https://dldir1v6.qq.com/weixin/Universal/Linux/WeChatLinux_arm64.deb"; \
+    else \
+        echo "Unsupported architecture: $ARCH"; exit 1; \
+    fi && \
+    wget -O /tmp/wechat.deb "$URL" \
     && apt-get install -y /tmp/wechat.deb \
     && rm /tmp/wechat.deb
 
